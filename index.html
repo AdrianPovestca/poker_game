@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>VS CODE POKER</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #0d1117;
+      color: #c9d1d9;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .editor {
+      width: 100%;
+      max-width: 1100px;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.45);
+    }
+
+    .topbar {
+      height: 42px;
+      background: #161b22;
+      border-bottom: 1px solid #30363d;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #484f58;
+    }
+
+    .filename {
+      margin-left: 12px;
+      color: #8b949e;
+      font-size: 13px;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      min-height: 620px;
+    }
+
+    .activity {
+      background: #0d1117;
+      border-right: 1px solid #21262d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 18px;
+      gap: 24px;
+      color: #484f58;
+      font-size: 18px;
+    }
+
+    .main {
+      padding: 28px;
+    }
+
+    .code {
+      color: #8b949e;
+      font-size: 14px;
+      line-height: 1.8;
+      margin-bottom: 26px;
+    }
+
+    .keyword {
+      color: #ff7b72;
+    }
+
+    .function {
+      color: #d2a8ff;
+    }
+
+    .string {
+      color: #a5d6ff;
+    }
+
+    .comment {
+      color: #6e7681;
+    }
+
+    .game {
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .game-header {
+      background: #161b22;
+      padding: 12px 16px;
+      border-bottom: 1px solid #30363d;
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+    }
+
+    .status {
+      color: #f85149;
+    }
+
+    .table {
+      padding: 28px;
+      background: #0b0f14;
+    }
+
+    .cards {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin: 28px 0;
+    }
+
+    .card {
+      width: 72px;
+      height: 102px;
+      background: #f0f0f0;
+      color: #111;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Georgia, serif;
+      font-size: 31px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.35);
+    }
+
+    .red {
+      color: #d11;
+    }
+
+    .result {
+      text-align: center;
+      padding: 20px;
+      border-top: 1px solid #21262d;
+    }
+
+    .result-title {
+      font-size: 12px;
+      color: #8b949e;
+      margin-bottom: 8px;
+    }
+
+    .loss {
+      font-size: 30px;
+      color: #f85149;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .score {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      font-size: 13px;
+    }
+
+    .score span {
+      color: #8b949e;
+    }
+
+    .score strong {
+      display: block;
+      color: #c9d1d9;
+      font-size: 22px;
+      margin-top: 4px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      margin-top: 24px;
+    }
+
+    button {
+      background: #238636;
+      border: 1px solid #2ea043;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2ea043;
+    }
+
+    @media (max-width: 700px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .activity {
+        display: none;
+      }
+
+      .main {
+        padding: 16px;
+      }
+
+      .card {
+        width: 55px;
+        height: 80px;
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="editor">
+
+    <div class="topbar">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="filename">poker.py</div>
+    </div>
+
+    <div class="workspace">
+
+      <div class="activity">
+        <div>◈</div>
+        <div>⌕</div>
+        <div>⑂</div>
+        <div>▶</div>
+      </div>
+
+      <main class="main">
+
+        <div class="code">
+          <div><span class="keyword">import</span> poker</div>
+          <br>
+          <div><span class="keyword">player</span> = <span class="string">"YOU"</span></div>
+          <div><span class="keyword">opponent</span> = <span class="string">"VS CODE"</span></div>
+          <br>
+          <div><span class="keyword">result</span> = <span class="function">play_hand</span>(player, opponent)</div>
+          <div><span class="comment"># this is probably going badly...</span></div>
+        </div>
+
+        <section class="game">
+
+          <div class="game-header">
+            <span>TERMINAL — poker.py</span>
+            <span class="status">● LIVE</span>
+          </div>
+
+          <div class="table">
+
+            <div class="cards" id="cards"></div>
+
+            <div class="result">
+
+              <div class="result-title">
+                ROUND RESULT
+              </div>
+
+              <div class="loss">
+                YOU LOST
+              </div>
+
+              <div class="score">
+
+                <div>
+                  <span>YOU</span>
+                  <strong id="userScore">0</strong>
+                </div>
+
+                <div>
+                  <span>VS CODE</span>
+                  <strong id="codeScore">1</strong>
+                </div>
+
+                <div>
+                  <span>LOSSES</span>
+                  <strong id="losses">1</strong>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="controls">
+              <button onclick="newGame()">PLAY AGAIN</button>
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    const deck = [
+      "A♠","K♠","Q♠","J♠","10♠",
+      "A♥","K♥","Q♥","J♥","10♥",
+      "A♦","K♦","Q♦","J♦","10♦",
+      "A♣","K♣","Q♣","J♣","10♣"
+    ];
+
+    let losses = 1;
+    let userWins = 0;
+    let codeWins = 1;
+
+    function drawCards() {
+
+      const shuffled = [...deck].sort(() => Math.random() - 0.5);
+
+      const hand = shuffled.slice(0, 5);
+
+      const container = document.getElementById("cards");
+
+      container.innerHTML = "";
+
+      hand.forEach(card => {
+
+        const div = document.createElement("div");
+
+        div.className = "card";
+
+        if (
+          card.includes("♥") ||
+          card.includes("♦")
+        ) {
+          div.classList.add("red");
+        }
+
+        div.textContent = card;
+
+        container.appendChild(div);
+
+      });
+    }
+
+    function newGame() {
+
+      losses++;
+      codeWins++;
+
+      document.getElementById("losses").textContent = losses;
+      document.getElementById("codeScore").textContent = codeWins;
+      document.getElementById("userScore").textContent = userWins;
+
+      drawCards();
+
+    }
+
+    drawCards();
+
+  </script>
+
+</body>
+</html>
