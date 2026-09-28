@@ -126,88 +126,36 @@
       background: #0b0f14;
     }
 
-
-    /* =========================
-       VS CODE HAND
-       ========================= */
-
-    .opponent-area {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    .opponent-label {
-      color: #8b949e;
-      font-size: 11px;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-    }
-
-    .opponent-cards {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      min-height: 86px;
-    }
-
-    .opponent-card {
-      width: 58px;
-      height: 82px;
-      position: relative;
-      border-radius: 7px;
-
-      background:
-        linear-gradient(135deg, #30363d 25%, transparent 25%) -10px 0,
-        linear-gradient(225deg, #30363d 25%, transparent 25%) -10px 0,
-        linear-gradient(315deg, #30363d 25%, transparent 25%),
-        linear-gradient(45deg, #30363d 25%, transparent 25%);
-
-      background-size: 20px 20px;
-      background-color: #161b22;
-
-      border: 2px solid #484f58;
-
-      box-shadow:
-        0 4px 12px rgba(0, 0, 0, .35);
-
-      opacity: 0;
-      transform: translateY(-8px) scale(.96);
-
-      animation: opponentCardIn .45s ease forwards;
-    }
-
-    .opponent-card:nth-child(2) {
-      animation-delay: .12s;
-    }
-
-    @keyframes opponentCardIn {
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-
     /* =========================
        COMMUNITY CARDS
        ========================= */
 
-    .community-label {
+    .cards-label {
       text-align: center;
       color: #6e7681;
       font-size: 11px;
       letter-spacing: 1px;
-      margin-bottom: 4px;
+      margin-bottom: 12px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .cards-label.show {
+      opacity: 1;
     }
 
     .cards {
       display: flex;
       gap: 12px;
       justify-content: center;
-      margin: 16px 0 28px;
+      margin: 18px 0 30px;
       min-height: 102px;
       perspective: 1000px;
     }
+
+    /* =========================
+       CARDS
+       ========================= */
 
     .card {
       width: 72px;
@@ -218,11 +166,9 @@
       font-family: Georgia, serif;
       font-size: 31px;
       transform-style: preserve-3d;
-
       transition:
         transform 0.65s cubic-bezier(.2, .7, .2, 1),
         filter 0.3s ease;
-
       transform: rotateY(180deg);
     }
 
@@ -250,9 +196,7 @@
     .card-front {
       background: #f0f0f0;
       color: #111;
-
-      box-shadow:
-        0 4px 12px rgba(0, 0, 0, .35);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .35);
     }
 
     .card-front.red {
@@ -272,12 +216,117 @@
 
       border: 2px solid #484f58;
 
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .35);
+
+      transform: rotateY(180deg);
+    }
+
+    /* =========================
+       SECRET CARDS
+       ========================= */
+
+    .secret-section {
+      border-top: 1px solid #21262d;
+      padding-top: 22px;
+      margin-top: 4px;
+
+      opacity: 0;
+      transform: translateY(8px);
+
+      transition:
+        opacity 0.5s ease,
+        transform 0.5s ease;
+    }
+
+    .secret-section.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .secret-label {
+      text-align: center;
+      color: #8b949e;
+      font-size: 11px;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+    }
+
+    .secret-cards {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      min-height: 102px;
+      perspective: 1000px;
+    }
+
+    .secret-card {
+      width: 72px;
+      height: 102px;
+      position: relative;
+      background: transparent;
+      border-radius: 7px;
+      font-family: Georgia, serif;
+      font-size: 31px;
+      transform-style: preserve-3d;
+
+      transform: rotateY(180deg);
+
+      transition:
+        transform 0.65s cubic-bezier(.2, .7, .2, 1);
+    }
+
+    .secret-card.flipped {
+      transform: rotateY(0deg);
+    }
+
+    .secret-card-front,
+    .secret-card-back {
+      position: absolute;
+      inset: 0;
+
+      width: 100%;
+      height: 100%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 7px;
+
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    .secret-card-front {
+      background: #f0f0f0;
+      color: #111;
+
+      box-shadow:
+        0 4px 12px rgba(0, 0, 0, .35);
+    }
+
+    .secret-card-front.red {
+      color: #d11;
+    }
+
+    .secret-card-back {
+      background:
+        linear-gradient(135deg, #30363d 25%, transparent 25%) -10px 0,
+        linear-gradient(225deg, #30363d 25%, transparent 25%) -10px 0,
+        linear-gradient(315deg, #30363d 25%, transparent 25%),
+        linear-gradient(45deg, #30363d 25%, transparent 25%);
+
+      background-size: 20px 20px;
+
+      background-color: #161b22;
+
+      border: 2px solid #484f58;
+
       box-shadow:
         0 4px 12px rgba(0, 0, 0, .35);
 
       transform: rotateY(180deg);
     }
-
 
     /* =========================
        RESULT
@@ -286,6 +335,8 @@
     .result {
       text-align: center;
       padding: 20px;
+      margin-top: 24px;
+
       border-top: 1px solid #21262d;
 
       opacity: 0;
@@ -333,7 +384,6 @@
       margin-top: 4px;
     }
 
-
     /* =========================
        CONTROLS
        ========================= */
@@ -345,10 +395,10 @@
     }
 
     #gameButton {
-      min-width: 190px;
+      min-width: 220px;
       height: 42px;
 
-      padding: 0 18px;
+      padding: 0 20px;
 
       background: #238636;
       border: 1px solid #2ea043;
@@ -369,19 +419,18 @@
         opacity 0.2s ease;
     }
 
-    #gameButton:hover:not(:disabled) {
+    #gameButton:hover {
       background: #2ea043;
     }
 
-    #gameButton:active:not(:disabled) {
+    #gameButton:active {
       transform: translateY(1px);
     }
 
     #gameButton:disabled {
-      opacity: .45;
+      opacity: 0.45;
       cursor: default;
     }
-
 
     /* =========================
        PAYMENT OVERLAY
@@ -413,7 +462,6 @@
       opacity: 1;
       visibility: visible;
     }
-
 
     /* =========================
        PAYMENT MODAL
@@ -627,7 +675,6 @@
       color: #8b949e;
     }
 
-
     /* =========================
        PROCESSING
        ========================= */
@@ -672,7 +719,6 @@
       color: #6e7681;
       font-size: 11px;
     }
-
 
     /* =========================
        PAYMENT CONFIRMED
@@ -745,7 +791,6 @@
       background: #2ea043;
     }
 
-
     /* =========================
        MOBILE
        ========================= */
@@ -764,7 +809,8 @@
         padding: 16px;
       }
 
-      .card {
+      .card,
+      .secret-card {
         width: 55px;
         height: 80px;
         font-size: 24px;
@@ -775,9 +821,9 @@
         gap: 7px;
       }
 
-      .opponent-card {
-        width: 48px;
-        height: 68px;
+      .secret-cards {
+        min-height: 80px;
+        gap: 7px;
       }
 
       .score {
@@ -792,7 +838,6 @@
         max-width: 390px;
       }
     }
-
   </style>
 </head>
 
@@ -898,31 +943,13 @@
 
           <div class="table">
 
+            <!-- COMMUNITY CARDS -->
 
-            <!-- =========================
-                 VS CODE HAND
-                 ========================= -->
-
-            <div class="opponent-area">
-
-              <div class="opponent-label">
-                VS CODE
-              </div>
-
-              <div
-                class="opponent-cards"
-                id="opponentCards"
-              ></div>
-
-            </div>
-
-
-            <!-- =========================
-                 COMMUNITY CARDS
-                 ========================= -->
-
-            <div class="community-label">
-              TABLE
+            <div
+              class="cards-label show"
+              id="communityLabel"
+            >
+              COMMUNITY CARDS
             </div>
 
             <div
@@ -931,9 +958,26 @@
             ></div>
 
 
-            <!-- =========================
-                 RESULT
-                 ========================= -->
+            <!-- SECRET VS CODE CARDS -->
+
+            <div
+              class="secret-section"
+              id="secretSection"
+            >
+
+              <div class="secret-label">
+                VS CODE — SECRET CARDS
+              </div>
+
+              <div
+                class="secret-cards"
+                id="secretCards"
+              ></div>
+
+            </div>
+
+
+            <!-- RESULT -->
 
             <div
               class="result"
@@ -994,9 +1038,7 @@
             </div>
 
 
-            <!-- =========================
-                 BUTTON
-                 ========================= -->
+            <!-- BUTTON -->
 
             <div class="controls">
 
@@ -1030,7 +1072,6 @@
   >
 
     <div class="payment-modal">
-
 
       <!-- =========================
            PAYMENT FORM
@@ -1213,7 +1254,6 @@
 
   <script>
 
-
     /* =========================
        DECK
        ========================= */
@@ -1262,22 +1302,27 @@
        GAME STATE
        ========================= */
 
+    /*
+      0 - 4:
+      Reveal five community cards
+
+      5:
+      Reveal first VS CODE secret card
+
+      6:
+      Reveal second VS CODE secret card
+
+      7:
+      Show result
+    */
+
     let currentCard = 0;
 
-    let gamePhase = "reveal";
+    let gamePhase = "community";
 
     let paymentTimer = null;
 
     let resultTimer = null;
-
-
-    /* =========================
-       CURRENT HAND
-       ========================= */
-
-    let opponentHand = [];
-
-    let communityCards = [];
 
 
     /* =========================
@@ -1287,8 +1332,11 @@
     const cardsContainer =
       document.getElementById("cards");
 
-    const opponentCardsContainer =
-      document.getElementById("opponentCards");
+    const secretCardsContainer =
+      document.getElementById("secretCards");
+
+    const secretSection =
+      document.getElementById("secretSection");
 
     const result =
       document.getElementById("result");
@@ -1365,102 +1413,69 @@
 
 
     /* =========================
-       CREATE OPPONENT CARDS
+       CREATE CARD
        ========================= */
 
-    function createOpponentCards() {
+    function createCard(card, secret = false) {
 
-      opponentCardsContainer.innerHTML = "";
+      const cardElement =
+        document.createElement("div");
 
-
-      opponentHand.forEach(() => {
-
-        const card =
-          document.createElement("div");
-
-        card.className =
-          "opponent-card";
-
-        opponentCardsContainer.appendChild(
-          card
-        );
-
-      });
-
-    }
+      cardElement.className =
+        secret
+          ? "secret-card"
+          : "card";
 
 
-    /* =========================
-       CREATE COMMUNITY CARDS
-       ========================= */
+      /* =========================
+         FRONT
+         ========================= */
 
-    function createCommunityCards() {
+      const front =
+        document.createElement("div");
 
-      cardsContainer.innerHTML = "";
-
-
-      communityCards.forEach((card) => {
-
-        const cardElement =
-          document.createElement("div");
-
-        cardElement.className =
-          "card";
+      front.className =
+        secret
+          ? "secret-card-front"
+          : "card-front";
 
 
-        /* =========================
-           FRONT
-           ========================= */
+      if (
+        card.includes("♥") ||
+        card.includes("♦")
+      ) {
 
-        const front =
-          document.createElement("div");
+        front.classList.add("red");
 
-        front.className =
-          "card-front";
-
-
-        if (
-          card.includes("♥") ||
-          card.includes("♦")
-        ) {
-
-          front.classList.add("red");
-
-        }
+      }
 
 
-        front.textContent = card;
+      front.textContent = card;
 
 
-        /* =========================
-           BACK
-           ========================= */
+      /* =========================
+         BACK
+         ========================= */
 
-        const back =
-          document.createElement("div");
+      const back =
+        document.createElement("div");
 
-        back.className =
-          "card-back";
-
-
-        /* =========================
-           ADD SIDES
-           ========================= */
-
-        cardElement.appendChild(front);
-
-        cardElement.appendChild(back);
+      back.className =
+        secret
+          ? "secret-card-back"
+          : "card-back";
 
 
-        /* =========================
-           ADD CARD
-           ========================= */
+      /* =========================
+         ADD SIDES
+         ========================= */
 
-        cardsContainer.appendChild(
-          cardElement
-        );
+      cardElement.appendChild(front);
 
-      });
+      cardElement.appendChild(back);
+
+
+      return cardElement;
 
     }
 
@@ -1476,7 +1491,7 @@
 
       currentCard = 0;
 
-      gamePhase = "reveal";
+      gamePhase = "community";
 
       button.disabled = false;
 
@@ -1487,40 +1502,58 @@
         "show"
       );
 
+      secretSection.classList.remove(
+        "show"
+      );
 
-      /*
-        Deal 7 cards:
+      cardsContainer.innerHTML = "";
 
-        2 = VS CODE
-        5 = community/table
-      */
-
-      const shuffledDeck =
-        shuffle(deck);
-
-
-      opponentHand =
-        shuffledDeck.slice(0, 2);
-
-
-      communityCards =
-        shuffledDeck.slice(2, 7);
+      secretCardsContainer.innerHTML = "";
 
 
       /*
-        Create VS CODE's
-        two hidden cards.
+        Seven cards are taken:
+
+        5 community cards
+        2 VS CODE secret cards
       */
 
-      createOpponentCards();
+      const hand =
+        shuffle(deck).slice(0, 7);
 
 
-      /*
-        Create the five
-        community cards.
-      */
+      /* =========================
+         COMMUNITY CARDS
+         ========================= */
 
-      createCommunityCards();
+      const communityCards =
+        hand.slice(0, 5);
+
+
+      communityCards.forEach((card) => {
+
+        cardsContainer.appendChild(
+          createCard(card, false)
+        );
+
+      });
+
+
+      /* =========================
+         SECRET CARDS
+         ========================= */
+
+      const secretCards =
+        hand.slice(5, 7);
+
+
+      secretCards.forEach((card) => {
+
+        secretCardsContainer.appendChild(
+          createCard(card, true)
+        );
+
+      });
 
     }
 
@@ -1531,67 +1564,133 @@
 
     function revealNextCard() {
 
-      const cards =
-        cardsContainer.querySelectorAll(
-          ".card"
-        );
-
+      /* =========================
+         COMMUNITY CARDS
+         ========================= */
 
       if (
-        currentCard >= cards.length
+        gamePhase === "community"
       ) {
+
+        const cards =
+          cardsContainer.querySelectorAll(
+            ".card"
+          );
+
+
+        if (
+          currentCard >= 5
+        ) {
+
+          return;
+
+        }
+
+
+        const card =
+          cards[currentCard];
+
+        card.classList.add("flipped");
+
+        currentCard++;
+
+
+        /*
+          After fifth community card,
+          reveal VS CODE secret section.
+        */
+
+        if (
+          currentCard === 5
+        ) {
+
+          gamePhase = "secret";
+
+          currentCard = 0;
+
+          setTimeout(() => {
+
+            secretSection.classList.add(
+              "show"
+            );
+
+          }, 350);
+
+        }
 
         return;
 
       }
 
 
-      const card =
-        cards[currentCard];
-
-
-      card.classList.add("flipped");
-
-      currentCard++;
-
-
       /* =========================
-         FIFTH CARD
+         SECRET CARDS
          ========================= */
 
       if (
-        currentCard === cards.length
+        gamePhase === "secret"
       ) {
 
-        gamePhase = "result";
-
-        button.disabled = true;
-
-
-        /*
-          Small cinematic pause
-          after the final card.
-        */
-
-        resultTimer = setTimeout(() => {
-
-          result.classList.add(
-            "show"
+        const secretCards =
+          secretCardsContainer.querySelectorAll(
+            ".secret-card"
           );
 
 
-          /*
-            Open payment modal
-            after result appears.
-          */
+        if (
+          currentCard >= 2
+        ) {
 
-          paymentTimer = setTimeout(() => {
+          return;
 
-            openPayment();
+        }
 
-          }, 850);
 
-        }, 450);
+        const card =
+          secretCards[currentCard];
+
+        card.classList.add("flipped");
+
+        currentCard++;
+
+
+        /*
+          After both secret cards
+          are revealed, show result.
+        */
+
+        if (
+          currentCard === 2
+        ) {
+
+          gamePhase = "result";
+
+          button.disabled = true;
+
+
+          resultTimer =
+            setTimeout(() => {
+
+              result.classList.add(
+                "show"
+              );
+
+
+              /*
+                Open payment after
+                the result has been visible.
+              */
+
+              paymentTimer =
+                setTimeout(() => {
+
+                  openPayment();
+
+                }, 900);
+
+            }, 550);
+
+        }
 
       }
 
@@ -1710,7 +1809,8 @@
     function advanceGame() {
 
       if (
-        gamePhase === "reveal"
+        gamePhase === "community" ||
+        gamePhase === "secret"
       ) {
 
         revealNextCard();
@@ -1749,8 +1849,8 @@
 
 
           /*
-            Don't let Space accidentally
-            skip the payment experience.
+            Don't allow Space to
+            interact with payment modal.
           */
 
           if (
