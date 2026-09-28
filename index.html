@@ -258,68 +258,362 @@
     }
 
     /* =========================
-       PAYMENT PUNCHLINE
+       PAYMENT OVERLAY
        ========================= */
 
-    .payment {
-      margin-top: 24px;
+    .payment-overlay {
+      position: fixed;
+      inset: 0;
 
-      font-size: 36px;
-      font-weight: 800;
-      letter-spacing: 3px;
+      background: rgba(1, 4, 9, 0.72);
 
-      color: #f85149;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 24px;
 
       opacity: 0;
-      transform: translateY(10px) scale(0.96);
+      visibility: hidden;
 
       transition:
-        opacity 0.45s ease,
-        transform 0.45s cubic-bezier(.2, .8, .2, 1);
+        opacity 0.3s ease,
+        visibility 0.3s ease;
+
+      z-index: 1000;
     }
 
-    .payment.show {
+    .payment-overlay.show {
       opacity: 1;
-      transform: translateY(0) scale(1);
+      visibility: visible;
     }
 
     /* =========================
-       BUTTON
+       PAYMENT MODAL
        ========================= */
 
-    .controls {
-      display: flex;
-      justify-content: center;
-      margin-top: 24px;
+    .payment-modal {
+      width: 100%;
+      max-width: 430px;
+
+      background: #161b22;
+
+      border: 1px solid #30363d;
+      border-radius: 10px;
+
+      box-shadow:
+        0 30px 100px rgba(0, 0, 0, 0.65);
+
+      overflow: hidden;
+
+      transform:
+        translateY(18px)
+        scale(0.97);
+
+      transition:
+        transform 0.35s cubic-bezier(.2, .8, .2, 1);
     }
 
-    button {
+    .payment-overlay.show .payment-modal {
+      transform:
+        translateY(0)
+        scale(1);
+    }
+
+    .payment-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 16px 18px;
+
+      border-bottom: 1px solid #30363d;
+    }
+
+    .payment-brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+
+      color: #c9d1d9;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .payment-icon {
+      width: 25px;
+      height: 25px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #238636;
+      color: white;
+
+      border-radius: 6px;
+
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .secure {
+      color: #6e7681;
+      font-size: 11px;
+    }
+
+    .payment-body {
+      padding: 26px;
+    }
+
+    .payment-title {
+      font-size: 21px;
+      color: #f0f6fc;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .payment-subtitle {
+      color: #8b949e;
+      font-size: 12px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .amount-box {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 7px;
+
+      padding: 14px 16px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 22px;
+    }
+
+    .amount-label {
+      color: #8b949e;
+      font-size: 11px;
+    }
+
+    .amount {
+      color: #f0f6fc;
+      font-size: 19px;
+      font-weight: 700;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+
+      color: #8b949e;
+      font-size: 11px;
+
+      margin-bottom: 7px;
+    }
+
+    .fake-input {
+      height: 42px;
+
+      display: flex;
+      align-items: center;
+
+      padding: 0 12px;
+
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+
+      color: #6e7681;
+
+      font-family: inherit;
+      font-size: 12px;
+    }
+
+    .fake-input.card-number {
+      color: #c9d1d9;
+      letter-spacing: 2px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .pay-button {
+      width: 100%;
+
+      height: 44px;
+
+      margin-top: 6px;
+
       background: #238636;
       border: 1px solid #2ea043;
-      color: white;
-      padding: 10px 20px;
+
       border-radius: 6px;
+
+      color: white;
+
       font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+
       cursor: pointer;
 
       transition:
         background 0.2s ease,
-        transform 0.15s ease,
-        opacity 0.2s ease;
+        transform 0.15s ease;
     }
 
-    button:hover {
+    .pay-button:hover {
       background: #2ea043;
     }
 
-    button:active {
+    .pay-button:active {
       transform: translateY(1px);
     }
 
-    button:disabled {
-      opacity: 0.45;
-      cursor: default;
-      transform: none;
+    .cancel-button {
+      width: 100%;
+
+      margin-top: 12px;
+
+      background: transparent;
+      border: none;
+
+      color: #6e7681;
+
+      font-family: inherit;
+      font-size: 11px;
+
+      cursor: pointer;
+    }
+
+    .cancel-button:hover {
+      color: #8b949e;
+    }
+
+    /* =========================
+       PROCESSING
+       ========================= */
+
+    .processing {
+      display: none;
+      text-align: center;
+      padding: 45px 20px;
+    }
+
+    .processing.show {
+      display: block;
+    }
+
+    .spinner {
+      width: 28px;
+      height: 28px;
+
+      margin: 0 auto 18px;
+
+      border: 3px solid #30363d;
+      border-top-color: #2ea043;
+
+      border-radius: 50%;
+
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .processing-title {
+      color: #f0f6fc;
+      font-size: 15px;
+      margin-bottom: 7px;
+    }
+
+    .processing-text {
+      color: #6e7681;
+      font-size: 11px;
+    }
+
+    /* =========================
+       PAYMENT CONFIRMED
+       ========================= */
+
+    .confirmed {
+      display: none;
+      text-align: center;
+      padding: 38px 20px 42px;
+    }
+
+    .confirmed.show {
+      display: block;
+    }
+
+    .confirmed-icon {
+      width: 44px;
+      height: 44px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      margin: 0 auto 17px;
+
+      background: #238636;
+      color: white;
+
+      border-radius: 50%;
+
+      font-size: 21px;
+      font-weight: 700;
+    }
+
+    .confirmed-title {
+      color: #f0f6fc;
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .confirmed-text {
+      color: #8b949e;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .continue-button {
+      width: 100%;
+
+      height: 42px;
+
+      margin-top: 24px;
+
+      background: #238636;
+      border: 1px solid #2ea043;
+
+      color: white;
+
+      border-radius: 6px;
+
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+
+      cursor: pointer;
+    }
+
+    .continue-button:hover {
+      background: #2ea043;
     }
 
     /* =========================
@@ -355,8 +649,12 @@
         gap: 25px;
       }
 
-      .payment {
-        font-size: 28px;
+      .payment-body {
+        padding: 22px;
+      }
+
+      .payment-modal {
+        max-width: 390px;
       }
     }
   </style>
@@ -530,16 +828,6 @@
 
               </div>
 
-
-              <!-- PAYMENT PUNCHLINE -->
-
-              <div
-                class="payment"
-                id="payment"
-              >
-                PAY $299
-              </div>
-
             </div>
 
 
@@ -561,6 +849,192 @@
         </section>
 
       </main>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       PAYMENT OVERLAY
+       ========================= -->
+
+  <div
+    class="payment-overlay"
+    id="paymentOverlay"
+  >
+
+    <div class="payment-modal">
+
+      <!-- =========================
+           PAYMENT FORM
+           ========================= -->
+
+      <div id="paymentForm">
+
+        <div class="payment-header">
+
+          <div class="payment-brand">
+
+            <div class="payment-icon">
+              $
+            </div>
+
+            <span>
+              VS CODE POKER
+            </span>
+
+          </div>
+
+          <div class="secure">
+            SECURE CHECKOUT
+          </div>
+
+        </div>
+
+
+        <div class="payment-body">
+
+          <div class="payment-title">
+            Continue playing
+          </div>
+
+          <div class="payment-subtitle">
+            You've lost this round.
+            A one-time payment is required
+            to continue playing.
+          </div>
+
+
+          <div class="amount-box">
+
+            <span class="amount-label">
+              AMOUNT DUE
+            </span>
+
+            <span class="amount">
+              $299.00
+            </span>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              CARD NUMBER
+            </label>
+
+            <div class="fake-input card-number">
+              •••• •••• •••• ••••
+            </div>
+
+          </div>
+
+
+          <div class="field-row">
+
+            <div class="field">
+
+              <label>
+                EXPIRY
+              </label>
+
+              <div class="fake-input">
+                MM / YY
+              </div>
+
+            </div>
+
+
+            <div class="field">
+
+              <label>
+                CVC
+              </label>
+
+              <div class="fake-input">
+                •••
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <button
+            class="pay-button"
+            onclick="processPayment()"
+          >
+            PAY $299.00
+          </button>
+
+
+          <button
+            class="cancel-button"
+            onclick="closePayment()"
+          >
+            Cancel
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           PROCESSING
+           ========================= -->
+
+      <div
+        class="processing"
+        id="processing"
+      >
+
+        <div class="spinner"></div>
+
+        <div class="processing-title">
+          Processing payment
+        </div>
+
+        <div class="processing-text">
+          Please wait...
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           CONFIRMED
+           ========================= -->
+
+      <div
+        class="confirmed"
+        id="confirmed"
+      >
+
+        <div class="confirmed-icon">
+          ✓
+        </div>
+
+        <div class="confirmed-title">
+          Payment confirmed
+        </div>
+
+        <div class="confirmed-text">
+          $299.00 has been paid.<br />
+          VS CODE is ready for another round.
+        </div>
+
+
+        <button
+          class="continue-button"
+          onclick="continueAfterPayment()"
+        >
+          CONTINUE PLAYING
+        </button>
+
+      </div>
 
     </div>
 
@@ -636,11 +1110,20 @@
     const result =
       document.getElementById("result");
 
-    const payment =
-      document.getElementById("payment");
-
     const button =
       document.getElementById("gameButton");
+
+    const paymentOverlay =
+      document.getElementById("paymentOverlay");
+
+    const paymentForm =
+      document.getElementById("paymentForm");
+
+    const processing =
+      document.getElementById("processing");
+
+    const confirmed =
+      document.getElementById("confirmed");
 
 
     /* =========================
@@ -717,8 +1200,6 @@
         "CONTINUE [SPACE]";
 
       result.classList.remove("show");
-
-      payment.classList.remove("show");
 
       cardsContainer.innerHTML = "";
 
@@ -837,8 +1318,7 @@
 
 
         /*
-          Small pause after
-          the final card.
+          Pause after final card.
         */
 
         resultTimer = setTimeout(() => {
@@ -847,28 +1327,107 @@
 
 
           /*
-            Then reveal the
-            $299 punchline.
+            Open payment modal
+            after result appears.
           */
 
           paymentTimer = setTimeout(() => {
 
-            payment.classList.add(
-              "show"
-            );
+            openPayment();
 
-            gamePhase = "next";
-
-            button.disabled = false;
-
-            button.textContent =
-              "PLAY AGAIN [SPACE]";
-
-          }, 700);
+          }, 850);
 
         }, 450);
 
       }
+
+    }
+
+
+    /* =========================
+       OPEN PAYMENT
+       ========================= */
+
+    function openPayment() {
+
+      paymentForm.style.display =
+        "block";
+
+      processing.classList.remove(
+        "show"
+      );
+
+      confirmed.classList.remove(
+        "show"
+      );
+
+      paymentOverlay.classList.add(
+        "show"
+      );
+
+    }
+
+
+    /* =========================
+       CLOSE PAYMENT
+       ========================= */
+
+    function closePayment() {
+
+      paymentOverlay.classList.remove(
+        "show"
+      );
+
+      gamePhase = "next";
+
+      button.disabled = false;
+
+      button.textContent =
+        "PLAY AGAIN [SPACE]";
+
+    }
+
+
+    /* =========================
+       PROCESS PAYMENT
+       ========================= */
+
+    function processPayment() {
+
+      paymentForm.style.display =
+        "none";
+
+      processing.classList.add(
+        "show"
+      );
+
+
+      setTimeout(() => {
+
+        processing.classList.remove(
+          "show"
+        );
+
+        confirmed.classList.add(
+          "show"
+        );
+
+      }, 1300);
+
+    }
+
+
+    /* =========================
+       CONTINUE AFTER PAYMENT
+       ========================= */
+
+    function continueAfterPayment() {
+
+      paymentOverlay.classList.remove(
+        "show"
+      );
+
+      newGame();
 
     }
 
@@ -933,6 +1492,21 @@
         ) {
 
           event.preventDefault();
+
+          /*
+            Don't let Space accidentally
+            skip the payment experience.
+          */
+
+          if (
+            paymentOverlay.classList.contains(
+              "show"
+            )
+          ) {
+
+            return;
+
+          }
 
           advanceGame();
 
