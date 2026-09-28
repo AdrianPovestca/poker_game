@@ -126,15 +126,85 @@
       background: #0b0f14;
     }
 
+
     /* =========================
-       CARDS
+       VS CODE HAND
        ========================= */
+
+    .opponent-area {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .opponent-label {
+      color: #8b949e;
+      font-size: 11px;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .opponent-cards {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      min-height: 86px;
+    }
+
+    .opponent-card {
+      width: 58px;
+      height: 82px;
+      position: relative;
+      border-radius: 7px;
+
+      background:
+        linear-gradient(135deg, #30363d 25%, transparent 25%) -10px 0,
+        linear-gradient(225deg, #30363d 25%, transparent 25%) -10px 0,
+        linear-gradient(315deg, #30363d 25%, transparent 25%),
+        linear-gradient(45deg, #30363d 25%, transparent 25%);
+
+      background-size: 20px 20px;
+      background-color: #161b22;
+
+      border: 2px solid #484f58;
+
+      box-shadow:
+        0 4px 12px rgba(0, 0, 0, .35);
+
+      opacity: 0;
+      transform: translateY(-8px) scale(.96);
+
+      animation: opponentCardIn .45s ease forwards;
+    }
+
+    .opponent-card:nth-child(2) {
+      animation-delay: .12s;
+    }
+
+    @keyframes opponentCardIn {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+
+    /* =========================
+       COMMUNITY CARDS
+       ========================= */
+
+    .community-label {
+      text-align: center;
+      color: #6e7681;
+      font-size: 11px;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
 
     .cards {
       display: flex;
       gap: 12px;
       justify-content: center;
-      margin: 28px 0;
+      margin: 16px 0 28px;
       min-height: 102px;
       perspective: 1000px;
     }
@@ -148,9 +218,11 @@
       font-family: Georgia, serif;
       font-size: 31px;
       transform-style: preserve-3d;
+
       transition:
         transform 0.65s cubic-bezier(.2, .7, .2, 1),
         filter 0.3s ease;
+
       transform: rotateY(180deg);
     }
 
@@ -178,7 +250,9 @@
     .card-front {
       background: #f0f0f0;
       color: #111;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, .35);
+
+      box-shadow:
+        0 4px 12px rgba(0, 0, 0, .35);
     }
 
     .card-front.red {
@@ -198,10 +272,12 @@
 
       border: 2px solid #484f58;
 
-      box-shadow: 0 4px 12px rgba(0, 0, 0, .35);
+      box-shadow:
+        0 4px 12px rgba(0, 0, 0, .35);
 
       transform: rotateY(180deg);
     }
+
 
     /* =========================
        RESULT
@@ -257,6 +333,56 @@
       margin-top: 4px;
     }
 
+
+    /* =========================
+       CONTROLS
+       ========================= */
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      margin-top: 22px;
+    }
+
+    #gameButton {
+      min-width: 190px;
+      height: 42px;
+
+      padding: 0 18px;
+
+      background: #238636;
+      border: 1px solid #2ea043;
+
+      border-radius: 6px;
+
+      color: white;
+
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition:
+        background 0.2s ease,
+        transform 0.15s ease,
+        opacity 0.2s ease;
+    }
+
+    #gameButton:hover:not(:disabled) {
+      background: #2ea043;
+    }
+
+    #gameButton:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    #gameButton:disabled {
+      opacity: .45;
+      cursor: default;
+    }
+
+
     /* =========================
        PAYMENT OVERLAY
        ========================= */
@@ -287,6 +413,7 @@
       opacity: 1;
       visibility: visible;
     }
+
 
     /* =========================
        PAYMENT MODAL
@@ -500,6 +627,7 @@
       color: #8b949e;
     }
 
+
     /* =========================
        PROCESSING
        ========================= */
@@ -544,6 +672,7 @@
       color: #6e7681;
       font-size: 11px;
     }
+
 
     /* =========================
        PAYMENT CONFIRMED
@@ -616,6 +745,7 @@
       background: #2ea043;
     }
 
+
     /* =========================
        MOBILE
        ========================= */
@@ -645,6 +775,11 @@
         gap: 7px;
       }
 
+      .opponent-card {
+        width: 48px;
+        height: 68px;
+      }
+
       .score {
         gap: 25px;
       }
@@ -657,6 +792,7 @@
         max-width: 390px;
       }
     }
+
   </style>
 </head>
 
@@ -762,7 +898,32 @@
 
           <div class="table">
 
-            <!-- CARDS -->
+
+            <!-- =========================
+                 VS CODE HAND
+                 ========================= -->
+
+            <div class="opponent-area">
+
+              <div class="opponent-label">
+                VS CODE
+              </div>
+
+              <div
+                class="opponent-cards"
+                id="opponentCards"
+              ></div>
+
+            </div>
+
+
+            <!-- =========================
+                 COMMUNITY CARDS
+                 ========================= -->
+
+            <div class="community-label">
+              TABLE
+            </div>
 
             <div
               class="cards"
@@ -770,7 +931,9 @@
             ></div>
 
 
-            <!-- RESULT -->
+            <!-- =========================
+                 RESULT
+                 ========================= -->
 
             <div
               class="result"
@@ -831,7 +994,9 @@
             </div>
 
 
-            <!-- BUTTON -->
+            <!-- =========================
+                 BUTTON
+                 ========================= -->
 
             <div class="controls">
 
@@ -865,6 +1030,7 @@
   >
 
     <div class="payment-modal">
+
 
       <!-- =========================
            PAYMENT FORM
@@ -1047,6 +1213,11 @@
 
   <script>
 
+
+    /* =========================
+       DECK
+       ========================= */
+
     const deck = [
 
       "A♠",
@@ -1101,11 +1272,23 @@
 
 
     /* =========================
+       CURRENT HAND
+       ========================= */
+
+    let opponentHand = [];
+
+    let communityCards = [];
+
+
+    /* =========================
        ELEMENTS
        ========================= */
 
     const cardsContainer =
       document.getElementById("cards");
+
+    const opponentCardsContainer =
+      document.getElementById("opponentCards");
 
     const result =
       document.getElementById("result");
@@ -1182,33 +1365,41 @@
 
 
     /* =========================
-       CREATE NEW HAND
+       CREATE OPPONENT CARDS
        ========================= */
 
-    function drawCards() {
+    function createOpponentCards() {
 
-      clearTimeout(paymentTimer);
-      clearTimeout(resultTimer);
+      opponentCardsContainer.innerHTML = "";
 
-      currentCard = 0;
 
-      gamePhase = "reveal";
+      opponentHand.forEach(() => {
 
-      button.disabled = false;
+        const card =
+          document.createElement("div");
 
-      button.textContent =
-        "CONTINUE [SPACE]";
+        card.className =
+          "opponent-card";
 
-      result.classList.remove("show");
+        opponentCardsContainer.appendChild(
+          card
+        );
+
+      });
+
+    }
+
+
+    /* =========================
+       CREATE COMMUNITY CARDS
+       ========================= */
+
+    function createCommunityCards() {
 
       cardsContainer.innerHTML = "";
 
 
-      const hand =
-        shuffle(deck).slice(0, 5);
-
-
-      hand.forEach((card) => {
+      communityCards.forEach((card) => {
 
         const cardElement =
           document.createElement("div");
@@ -1275,6 +1466,66 @@
 
 
     /* =========================
+       CREATE NEW HAND
+       ========================= */
+
+    function drawCards() {
+
+      clearTimeout(paymentTimer);
+      clearTimeout(resultTimer);
+
+      currentCard = 0;
+
+      gamePhase = "reveal";
+
+      button.disabled = false;
+
+      button.textContent =
+        "CONTINUE [SPACE]";
+
+      result.classList.remove(
+        "show"
+      );
+
+
+      /*
+        Deal 7 cards:
+
+        2 = VS CODE
+        5 = community/table
+      */
+
+      const shuffledDeck =
+        shuffle(deck);
+
+
+      opponentHand =
+        shuffledDeck.slice(0, 2);
+
+
+      communityCards =
+        shuffledDeck.slice(2, 7);
+
+
+      /*
+        Create VS CODE's
+        two hidden cards.
+      */
+
+      createOpponentCards();
+
+
+      /*
+        Create the five
+        community cards.
+      */
+
+      createCommunityCards();
+
+    }
+
+
+    /* =========================
        REVEAL NEXT CARD
        ========================= */
 
@@ -1318,12 +1569,15 @@
 
 
         /*
-          Pause after final card.
+          Small cinematic pause
+          after the final card.
         */
 
         resultTimer = setTimeout(() => {
 
-          result.classList.add("show");
+          result.classList.add(
+            "show"
+          );
 
 
           /*
@@ -1493,6 +1747,7 @@
 
           event.preventDefault();
 
+
           /*
             Don't let Space accidentally
             skip the payment experience.
@@ -1507,6 +1762,7 @@
             return;
 
           }
+
 
           advanceGame();
 
