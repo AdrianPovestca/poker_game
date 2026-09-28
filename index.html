@@ -126,35 +126,101 @@
       background: #0b0f14;
     }
 
+    /* =========================
+       CARDS
+       ========================= */
+
     .cards {
       display: flex;
       gap: 12px;
       justify-content: center;
       margin: 28px 0;
+      min-height: 102px;
+      perspective: 1000px;
     }
 
     .card {
       width: 72px;
       height: 102px;
-      background: #f0f0f0;
-      color: #111;
+      position: relative;
+      background: transparent;
       border-radius: 7px;
+      font-family: Georgia, serif;
+      font-size: 31px;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(.2, .7, .2, 1);
+      transform: rotateY(180deg);
+    }
+
+    .card.flipped {
+      transform: rotateY(0deg);
+    }
+
+    .card-front,
+    .card-back {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: Georgia, serif;
-      font-size: 31px;
-      box-shadow: 0 4px 12px rgba(0,0,0,.35);
+
+      border-radius: 7px;
+
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
 
-    .red {
+    .card-front {
+      background: #f0f0f0;
+      color: #111;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .35);
+    }
+
+    .card-front.red {
       color: #d11;
     }
+
+    .card-back {
+      background:
+        linear-gradient(135deg, #30363d 25%, transparent 25%) -10px 0,
+        linear-gradient(225deg, #30363d 25%, transparent 25%) -10px 0,
+        linear-gradient(315deg, #30363d 25%, transparent 25%),
+        linear-gradient(45deg, #30363d 25%, transparent 25%);
+
+      background-size: 20px 20px;
+
+      background-color: #161b22;
+
+      border: 2px solid #484f58;
+
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .35);
+
+      transform: rotateY(180deg);
+    }
+
+    /* =========================
+       RESULT
+       ========================= */
 
     .result {
       text-align: center;
       padding: 20px;
       border-top: 1px solid #21262d;
+
+      opacity: 0;
+      transform: translateY(10px);
+
+      transition:
+        opacity 0.6s ease,
+        transform 0.6s ease;
+    }
+
+    .result.show {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .result-title {
@@ -189,6 +255,10 @@
       margin-top: 4px;
     }
 
+    /* =========================
+       BUTTON
+       ========================= */
+
     .controls {
       display: flex;
       justify-content: center;
@@ -209,7 +279,12 @@
       background: #2ea043;
     }
 
+    /* =========================
+       MOBILE
+       ========================= */
+
     @media (max-width: 700px) {
+
       .workspace {
         grid-template-columns: 1fr;
       }
@@ -227,6 +302,15 @@
         height: 80px;
         font-size: 24px;
       }
+
+      .cards {
+        min-height: 80px;
+        gap: 7px;
+      }
+
+      .score {
+        gap: 25px;
+      }
     }
   </style>
 </head>
@@ -235,46 +319,120 @@
 
   <div class="editor">
 
+    <!-- =========================
+         TOP BAR
+         ========================= -->
+
     <div class="topbar">
+
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot"></div>
-      <div class="filename">poker.py</div>
+
+      <div class="filename">
+        poker.py
+      </div>
+
     </div>
+
+
+    <!-- =========================
+         WORKSPACE
+         ========================= -->
 
     <div class="workspace">
 
       <div class="activity">
+
         <div>◈</div>
         <div>⌕</div>
         <div>⑂</div>
         <div>▶</div>
+
       </div>
+
 
       <main class="main">
 
+        <!-- =========================
+             CODE
+             ========================= -->
+
         <div class="code">
-          <div><span class="keyword">import</span> poker</div>
+
+          <div>
+            <span class="keyword">import</span> poker
+          </div>
+
           <br>
-          <div><span class="keyword">player</span> = <span class="string">"YOU"</span></div>
-          <div><span class="keyword">opponent</span> = <span class="string">"VS CODE"</span></div>
+
+          <div>
+            <span class="keyword">player</span> =
+            <span class="string">"YOU"</span>
+          </div>
+
+          <div>
+            <span class="keyword">opponent</span> =
+            <span class="string">"VS CODE"</span>
+          </div>
+
           <br>
-          <div><span class="keyword">result</span> = <span class="function">play_hand</span>(player, opponent)</div>
-          <div><span class="comment"># this is probably going badly...</span></div>
+
+          <div>
+            <span class="keyword">result</span> =
+            <span class="function">play_hand</span>(player, opponent)
+          </div>
+
+          <div>
+            <span class="comment">
+              # this is probably going badly...
+            </span>
+          </div>
+
         </div>
+
+
+        <!-- =========================
+             GAME
+             ========================= -->
 
         <section class="game">
 
+
+          <!-- GAME HEADER -->
+
           <div class="game-header">
-            <span>TERMINAL — poker.py</span>
-            <span class="status">● LIVE</span>
+
+            <span>
+              TERMINAL — poker.py
+            </span>
+
+            <span class="status">
+              ● LIVE
+            </span>
+
           </div>
+
+
+          <!-- TABLE -->
 
           <div class="table">
 
-            <div class="cards" id="cards"></div>
 
-            <div class="result">
+            <!-- CARDS -->
+
+            <div
+              class="cards"
+              id="cards"
+            ></div>
+
+
+            <!-- RESULT -->
+
+            <div
+              class="result"
+              id="result"
+            >
 
               <div class="result-title">
                 ROUND RESULT
@@ -284,30 +442,64 @@
                 YOU LOST
               </div>
 
+
               <div class="score">
 
-                <div>
-                  <span>YOU</span>
-                  <strong id="userScore">0</strong>
-                </div>
 
                 <div>
-                  <span>VS CODE</span>
-                  <strong id="codeScore">1</strong>
+
+                  <span>
+                    YOU
+                  </span>
+
+                  <strong id="userScore">
+                    0
+                  </strong>
+
                 </div>
 
+
                 <div>
-                  <span>LOSSES</span>
-                  <strong id="losses">1</strong>
+
+                  <span>
+                    VS CODE
+                  </span>
+
+                  <strong id="codeScore">
+                    1
+                  </strong>
+
                 </div>
+
+
+                <div>
+
+                  <span>
+                    LOSSES
+                  </span>
+
+                  <strong id="losses">
+                    1
+                  </strong>
+
+                </div>
+
 
               </div>
 
             </div>
 
+
+            <!-- BUTTON -->
+
             <div class="controls">
-              <button onclick="newGame()">PLAY AGAIN</button>
+
+              <button onclick="newGame()">
+                PLAY AGAIN
+              </button>
+
             </div>
+
 
           </div>
 
@@ -319,61 +511,214 @@
 
   </div>
 
+
+  <!-- =========================
+       JAVASCRIPT
+       ========================= -->
+
   <script>
 
     const deck = [
-      "A♠","K♠","Q♠","J♠","10♠",
-      "A♥","K♥","Q♥","J♥","10♥",
-      "A♦","K♦","Q♦","J♦","10♦",
-      "A♣","K♣","Q♣","J♣","10♣"
+
+      "A♠",
+      "K♠",
+      "Q♠",
+      "J♠",
+      "10♠",
+
+      "A♥",
+      "K♥",
+      "Q♥",
+      "J♥",
+      "10♥",
+
+      "A♦",
+      "K♦",
+      "Q♦",
+      "J♦",
+      "10♦",
+
+      "A♣",
+      "K♣",
+      "Q♣",
+      "J♣",
+      "10♣"
+
     ];
 
+
     let losses = 1;
+
     let userWins = 0;
+
     let codeWins = 1;
+
+
+    /* =========================
+       DRAW CARDS
+       ========================= */
 
     function drawCards() {
 
-      const shuffled = [...deck].sort(() => Math.random() - 0.5);
+      const shuffled =
+        [...deck].sort(
+          () => Math.random() - 0.5
+        );
 
-      const hand = shuffled.slice(0, 5);
+      const hand =
+        shuffled.slice(0, 5);
 
-      const container = document.getElementById("cards");
+
+      const container =
+        document.getElementById("cards");
+
+      const result =
+        document.getElementById("result");
+
+
+      /* Clear old cards */
 
       container.innerHTML = "";
 
-      hand.forEach(card => {
 
-        const div = document.createElement("div");
+      /* Hide result */
 
-        div.className = "card";
+      result.classList.remove("show");
+
+
+      /* Create cards */
+
+      hand.forEach((card, index) => {
+
+
+        const cardElement =
+          document.createElement("div");
+
+        cardElement.className = "card";
+
+
+        /* FRONT */
+
+        const front =
+          document.createElement("div");
+
+        front.className =
+          "card-front";
+
+
+        /* Red suits */
 
         if (
           card.includes("♥") ||
           card.includes("♦")
         ) {
-          div.classList.add("red");
+
+          front.classList.add("red");
+
         }
 
-        div.textContent = card;
 
-        container.appendChild(div);
+        front.textContent = card;
+
+
+        /* BACK */
+
+        const back =
+          document.createElement("div");
+
+        back.className =
+          "card-back";
+
+
+        /* Add both sides */
+
+        cardElement.appendChild(front);
+
+        cardElement.appendChild(back);
+
+
+        /* Add card to table */
+
+        container.appendChild(cardElement);
+
+
+        /*
+          Reveal cards one by one.
+
+          First card:
+          600ms
+
+          Second:
+          1100ms
+
+          Third:
+          1600ms
+
+          Fourth:
+          2100ms
+
+          Fifth:
+          2600ms
+        */
+
+        setTimeout(() => {
+
+          cardElement.classList.add("flipped");
+
+        }, 600 + (index * 500));
 
       });
+
+
+      /*
+        Show result after
+        all five cards are revealed.
+      */
+
+      setTimeout(() => {
+
+        result.classList.add("show");
+
+      }, 600 + (5 * 500) + 250);
+
     }
+
+
+    /* =========================
+       NEW GAME
+       ========================= */
 
     function newGame() {
 
+
       losses++;
+
       codeWins++;
 
-      document.getElementById("losses").textContent = losses;
-      document.getElementById("codeScore").textContent = codeWins;
-      document.getElementById("userScore").textContent = userWins;
+
+      document.getElementById(
+        "losses"
+      ).textContent = losses;
+
+
+      document.getElementById(
+        "codeScore"
+      ).textContent = codeWins;
+
+
+      document.getElementById(
+        "userScore"
+      ).textContent = userWins;
+
 
       drawCards();
 
     }
+
+
+    /* =========================
+       START
+       ========================= */
 
     drawCards();
 
