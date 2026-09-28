@@ -148,7 +148,9 @@
       font-family: Georgia, serif;
       font-size: 31px;
       transform-style: preserve-3d;
-      transition: transform 0.6s cubic-bezier(.2, .7, .2, 1);
+      transition:
+        transform 0.65s cubic-bezier(.2, .7, .2, 1),
+        filter 0.3s ease;
       transform: rotateY(180deg);
     }
 
@@ -256,6 +258,32 @@
     }
 
     /* =========================
+       PAYMENT PUNCHLINE
+       ========================= */
+
+    .payment {
+      margin-top: 24px;
+
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: 3px;
+
+      color: #f85149;
+
+      opacity: 0;
+      transform: translateY(10px) scale(0.96);
+
+      transition:
+        opacity 0.45s ease,
+        transform 0.45s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .payment.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* =========================
        BUTTON
        ========================= */
 
@@ -273,10 +301,25 @@
       border-radius: 6px;
       font-family: inherit;
       cursor: pointer;
+
+      transition:
+        background 0.2s ease,
+        transform 0.15s ease,
+        opacity 0.2s ease;
     }
 
     button:hover {
       background: #2ea043;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: default;
+      transform: none;
     }
 
     /* =========================
@@ -310,6 +353,10 @@
 
       .score {
         gap: 25px;
+      }
+
+      .payment {
+        font-size: 28px;
       }
     }
   </style>
@@ -398,7 +445,6 @@
 
         <section class="game">
 
-
           <!-- GAME HEADER -->
 
           <div class="game-header">
@@ -417,7 +463,6 @@
           <!-- TABLE -->
 
           <div class="table">
-
 
             <!-- CARDS -->
 
@@ -444,7 +489,6 @@
 
 
               <div class="score">
-
 
                 <div>
 
@@ -484,7 +528,16 @@
 
                 </div>
 
+              </div>
 
+
+              <!-- PAYMENT PUNCHLINE -->
+
+              <div
+                class="payment"
+                id="payment"
+              >
+                PAY $299
               </div>
 
             </div>
@@ -494,12 +547,14 @@
 
             <div class="controls">
 
-              <button onclick="newGame()">
-                PLAY AGAIN
+              <button
+                id="gameButton"
+                onclick="advanceGame()"
+              >
+                CONTINUE [SPACE]
               </button>
 
             </div>
-
 
           </div>
 
@@ -547,6 +602,10 @@
     ];
 
 
+    /* =========================
+       SCORE
+       ========================= */
+
     let losses = 1;
 
     let userWins = 0;
@@ -555,49 +614,131 @@
 
 
     /* =========================
-       DRAW CARDS
+       GAME STATE
+       ========================= */
+
+    let currentCard = 0;
+
+    let gamePhase = "reveal";
+
+    let paymentTimer = null;
+
+    let resultTimer = null;
+
+
+    /* =========================
+       ELEMENTS
+       ========================= */
+
+    const cardsContainer =
+      document.getElementById("cards");
+
+    const result =
+      document.getElementById("result");
+
+    const payment =
+      document.getElementById("payment");
+
+    const button =
+      document.getElementById("gameButton");
+
+
+    /* =========================
+       UPDATE SCORE
+       ========================= */
+
+    function updateScore() {
+
+      document.getElementById(
+        "losses"
+      ).textContent = losses;
+
+      document.getElementById(
+        "codeScore"
+      ).textContent = codeWins;
+
+      document.getElementById(
+        "userScore"
+      ).textContent = userWins;
+
+    }
+
+
+    /* =========================
+       SHUFFLE
+       ========================= */
+
+    function shuffle(array) {
+
+      const shuffled = [...array];
+
+      for (
+        let i = shuffled.length - 1;
+        i > 0;
+        i--
+      ) {
+
+        const j =
+          Math.floor(
+            Math.random() * (i + 1)
+          );
+
+        [
+          shuffled[i],
+          shuffled[j]
+        ] = [
+          shuffled[j],
+          shuffled[i]
+        ];
+
+      }
+
+      return shuffled;
+
+    }
+
+
+    /* =========================
+       CREATE NEW HAND
        ========================= */
 
     function drawCards() {
 
-      const shuffled =
-        [...deck].sort(
-          () => Math.random() - 0.5
-        );
+      clearTimeout(paymentTimer);
+      clearTimeout(resultTimer);
 
-      const hand =
-        shuffled.slice(0, 5);
+      currentCard = 0;
 
+      gamePhase = "reveal";
 
-      const container =
-        document.getElementById("cards");
+      button.disabled = false;
 
-      const result =
-        document.getElementById("result");
-
-
-      /* Clear old cards */
-
-      container.innerHTML = "";
-
-
-      /* Hide result */
+      button.textContent =
+        "CONTINUE [SPACE]";
 
       result.classList.remove("show");
 
+      payment.classList.remove("show");
 
-      /* Create cards */
+      cardsContainer.innerHTML = "";
 
-      hand.forEach((card, index) => {
 
+      const hand =
+        shuffle(deck).slice(0, 5);
+
+
+      hand.forEach((card) => {
 
         const cardElement =
           document.createElement("div");
 
-        cardElement.className = "card";
+        cardElement.className =
+          "card";
 
 
-        /* FRONT */
+        /* =========================
+           FRONT
+           ========================= */
 
         const front =
           document.createElement("div");
@@ -605,8 +746,6 @@
         front.className =
           "card-front";
 
-
-        /* Red suits */
 
         if (
           card.includes("♥") ||
@@ -621,7 +760,9 @@
         front.textContent = card;
 
 
-        /* BACK */
+        /* =========================
+           BACK
+           ========================= */
 
         const back =
           document.createElement("div");
@@ -630,56 +771,104 @@
           "card-back";
 
 
-        /* Add both sides */
+        /* =========================
+           ADD SIDES
+           ========================= */
 
         cardElement.appendChild(front);
 
         cardElement.appendChild(back);
 
 
-        /* Add card to table */
+        /* =========================
+           ADD CARD
+           ========================= */
 
-        container.appendChild(cardElement);
-
-
-        /*
-          Reveal cards one by one.
-
-          First card:
-          600ms
-
-          Second:
-          1100ms
-
-          Third:
-          1600ms
-
-          Fourth:
-          2100ms
-
-          Fifth:
-          2600ms
-        */
-
-        setTimeout(() => {
-
-          cardElement.classList.add("flipped");
-
-        }, 600 + (index * 500));
+        cardsContainer.appendChild(
+          cardElement
+        );
 
       });
 
+    }
 
-      /*
-        Show result after
-        all five cards are revealed.
-      */
 
-      setTimeout(() => {
+    /* =========================
+       REVEAL NEXT CARD
+       ========================= */
 
-        result.classList.add("show");
+    function revealNextCard() {
 
-      }, 600 + (5 * 500) + 250);
+      const cards =
+        cardsContainer.querySelectorAll(
+          ".card"
+        );
+
+
+      if (
+        currentCard >= cards.length
+      ) {
+
+        return;
+
+      }
+
+
+      const card =
+        cards[currentCard];
+
+
+      card.classList.add("flipped");
+
+      currentCard++;
+
+
+      /* =========================
+         FIFTH CARD
+         ========================= */
+
+      if (
+        currentCard === cards.length
+      ) {
+
+        gamePhase = "result";
+
+        button.disabled = true;
+
+
+        /*
+          Small pause after
+          the final card.
+        */
+
+        resultTimer = setTimeout(() => {
+
+          result.classList.add("show");
+
+
+          /*
+            Then reveal the
+            $299 punchline.
+          */
+
+          paymentTimer = setTimeout(() => {
+
+            payment.classList.add(
+              "show"
+            );
+
+            gamePhase = "next";
+
+            button.disabled = false;
+
+            button.textContent =
+              "PLAY AGAIN [SPACE]";
+
+          }, 700);
+
+        }, 450);
+
+      }
 
     }
 
@@ -690,26 +879,11 @@
 
     function newGame() {
 
-
       losses++;
 
       codeWins++;
 
-
-      document.getElementById(
-        "losses"
-      ).textContent = losses;
-
-
-      document.getElementById(
-        "codeScore"
-      ).textContent = codeWins;
-
-
-      document.getElementById(
-        "userScore"
-      ).textContent = userWins;
-
+      updateScore();
 
       drawCards();
 
@@ -717,8 +891,62 @@
 
 
     /* =========================
+       MAIN GAME CONTROL
+       ========================= */
+
+    function advanceGame() {
+
+      if (
+        gamePhase === "reveal"
+      ) {
+
+        revealNextCard();
+
+        return;
+
+      }
+
+
+      if (
+        gamePhase === "next"
+      ) {
+
+        newGame();
+
+        return;
+
+      }
+
+    }
+
+
+    /* =========================
+       SPACE BAR
+       ========================= */
+
+    document.addEventListener(
+      "keydown",
+      function(event) {
+
+        if (
+          event.code === "Space"
+        ) {
+
+          event.preventDefault();
+
+          advanceGame();
+
+        }
+
+      }
+    );
+
+
+    /* =========================
        START
        ========================= */
+
+    updateScore();
 
     drawCards();
 
